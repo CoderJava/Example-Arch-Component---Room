@@ -1,12 +1,22 @@
 package com.ysn.examplearchcomponentroom.views.main;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.ysn.examplearchcomponentroom.R;
+import com.ysn.examplearchcomponentroom.db.entity.Student;
+import com.ysn.examplearchcomponentroom.views.main.adapter.AdapterDataStudentMainActivity;
+import com.ysn.examplearchcomponentroom.views.submenu.student.add.StudentAddActivity;
+
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +35,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initPresenter();
+        doLoadData();
+    }
+
+    private void doLoadData() {
+        mainActivityPresenter.onLoadData(this);
     }
 
     private void initPresenter() {
@@ -53,10 +68,36 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_add_menu_main_activity:
-                // todo: intent to AddStudentActivity
+                // todo: intent to StudentAddActivity
+                startActivity(new Intent(this, StudentAddActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Subscribe
+    public void onMessageEvent(Map<String, Object> mapDataStudent) {
+        String action = mapDataStudent.get("action").toString();
+        if (action.equalsIgnoreCase("insert")) {
+            Object objectStudent = mapDataStudent.get("student");
+            Student student = null;
+            if (objectStudent instanceof Student) {
+                student = (Student) objectStudent;
+            }
+            mainActivityPresenter.onAddNewItemAdapter(student);
+        } else if (action.equalsIgnoreCase("update")) {
+            Object objectIndexChanged = mapDataStudent.get("indexChanged");
+            Object objectStudent = mapDataStudent.get("student");
+            int indexChanged = 0;
+            Student student = null;
+            if (objectStudent instanceof Student) {
+                student = (Student) objectStudent;
+            }
+            if (objectIndexChanged instanceof Integer) {
+                indexChanged = (Integer) objectIndexChanged;
+            }
+            mainActivityPresenter.onUpdateItemAdapter(indexChanged, student);
+        }
     }
 
     @Override
@@ -69,4 +110,26 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         mainActivityPresenter.onDetach();
     }
 
+    @Override
+    public void loadData(AdapterDataStudentMainActivity adapterDataStudentMainActivity) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerViewDataActivityMain.setLayoutManager(linearLayoutManager);
+        recyclerViewDataActivityMain.setAdapter(adapterDataStudentMainActivity);
+    }
+
+    @Override
+    public void loadDataFailed() {
+        Toast.makeText(this, "Internal error!", Toast.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void addNewItemAdapter() {
+        // nothing to do in here
+    }
+
+    @Override
+    public void updateItemAdapter() {
+        // nothing to do in here
+    }
 }

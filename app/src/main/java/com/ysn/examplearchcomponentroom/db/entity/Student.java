@@ -23,9 +23,6 @@ public class Student {
     @ColumnInfo(name = "address")
     public String address;
 
-    public Student() {
-    }
-
     public Student(String id, String name, String birthday, String gender, String address) {
         this.id = id;
         this.name = name;
