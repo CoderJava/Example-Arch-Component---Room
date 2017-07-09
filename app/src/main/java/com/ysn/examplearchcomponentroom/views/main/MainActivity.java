@@ -1,8 +1,8 @@
 package com.ysn.examplearchcomponentroom.views.main;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -13,7 +13,9 @@ import com.ysn.examplearchcomponentroom.R;
 import com.ysn.examplearchcomponentroom.db.entity.Student;
 import com.ysn.examplearchcomponentroom.views.main.adapter.AdapterDataStudentMainActivity;
 import com.ysn.examplearchcomponentroom.views.submenu.student.add.StudentAddActivity;
+import com.ysn.examplearchcomponentroom.views.submenu.student.edit.StudentEditActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initPresenter();
+        EventBus.getDefault().register(this);
         doLoadData();
     }
 
@@ -68,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_add_menu_main_activity:
-                // todo: intent to StudentAddActivity
                 startActivity(new Intent(this, StudentAddActivity.class));
                 return true;
         }
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         mainActivityPresenter.onDetach();
     }
 
+
     @Override
     public void loadData(AdapterDataStudentMainActivity adapterDataStudentMainActivity) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -131,5 +134,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     @Override
     public void updateItemAdapter() {
         // nothing to do in here
+    }
+
+    @Override
+    public void clickEdit(Student student) {
+        Intent intentStudentEditActivity = new Intent(this, StudentEditActivity.class);
+        EventBus.getDefault().postSticky(student);
+        startActivity(intentStudentEditActivity);
     }
 }

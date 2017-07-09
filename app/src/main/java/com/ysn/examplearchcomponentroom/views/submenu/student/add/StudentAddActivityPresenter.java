@@ -11,6 +11,8 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import io.reactivex.internal.operators.flowable.FlowableFromCallable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -55,14 +57,18 @@ class StudentAddActivityPresenter implements Presenter<StudentAddActivityView> {
                                           AppDatabase.getInstance(context)
                                                   .studentDao()
                                                   .insertStudent(student);
-                                          studentAddActivityView.saveData(student);
                                           return true;
                                       }
                                   }
                     )
-                    .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe();
+                    .subscribeOn(Schedulers.newThread())
+                    .subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(@NonNull Boolean aBoolean) throws Exception {
+                            studentAddActivityView.saveData(student);
+                        }
+                    });
         }
     }
 }

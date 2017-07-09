@@ -1,5 +1,6 @@
 package com.ysn.examplearchcomponentroom.views.main;
 
+import com.ysn.examplearchcomponentroom.db.entity.Student;
 import com.ysn.examplearchcomponentroom.views.base.View;
 import com.ysn.examplearchcomponentroom.views.main.adapter.AdapterDataStudentMainActivity;
 
@@ -16,4 +17,7 @@ interface MainActivityView extends View {
     void addNewItemAdapter();
 
     void updateItemAdapter();
+
+    void clickEdit(Student student);
+
 }

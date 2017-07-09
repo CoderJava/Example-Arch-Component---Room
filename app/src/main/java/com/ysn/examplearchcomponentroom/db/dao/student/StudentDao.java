@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.ysn.examplearchcomponentroom.db.entity.Student;
 
@@ -22,7 +23,10 @@ public interface StudentDao {
     Flowable<List<Student>> getAll();
 
     @Query("SELECT * FROM student WHERE id = :id")
-    Student findStudentById(String id);
+    Flowable<Student> findStudentById(String id);
+
+    @Update
+    void updateStudent(Student... students);
 
     @Query("DELETE FROM student")
     void deleteAll();

@@ -57,7 +57,7 @@ public class AdapterDataStudentMainActivity
     }
 
     public void updateItemAdapter(int indexChanged, Student student) {
-        this.listDataStudent.add(indexChanged, student);
+        this.listDataStudent.set(indexChanged, student);
         notifyItemChanged(indexChanged);
     }
 

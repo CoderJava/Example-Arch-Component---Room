@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.ysn.examplearchcomponentroom.R;
 import com.ysn.examplearchcomponentroom.db.entity.Student;
+import com.ysn.examplearchcomponentroom.utils.ConverterDateLibrary;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -47,6 +48,7 @@ public class StudentAddActivity extends AppCompatActivity implements StudentAddA
         setContentView(R.layout.activity_student_add);
         ButterKnife.bind(this);
         initPresenter();
+        setTitle("Add Data Student");
     }
 
     private void initPresenter() {
@@ -67,7 +69,9 @@ public class StudentAddActivity extends AppCompatActivity implements StudentAddA
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month,
                                                   int dayOfMonth) {
-
+                                textInputEditTextStudentBirthdayActivityStudentAdd.setText(
+                                        new ConverterDateLibrary().formatToString(year, month, dayOfMonth)
+                                );
                             }
                         },
                         calendar.get(Calendar.YEAR),

@@ -1,16 +1,11 @@
 package com.ysn.examplearchcomponentroom.views.main;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.ysn.examplearchcomponentroom.db.AppDatabase;
 import com.ysn.examplearchcomponentroom.db.entity.Student;
 import com.ysn.examplearchcomponentroom.views.base.Presenter;
 import com.ysn.examplearchcomponentroom.views.main.adapter.AdapterDataStudentMainActivity;
-
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +25,7 @@ class MainActivityPresenter implements Presenter<MainActivityView> {
     private MainActivityView mainActivityView;
     private List<Student> listDataStudent;
     private AdapterDataStudentMainActivity adapterDataStudentMainActivity;
+    private Context context;
 
     @Override
     public void onAttach(MainActivityView view) {
@@ -42,6 +38,7 @@ class MainActivityPresenter implements Presenter<MainActivityView> {
     }
 
     void onLoadData(Context context) {
+        this.context = context;
         if (listDataStudent == null) {
             listDataStudent = new ArrayList<>();
         }
@@ -65,6 +62,7 @@ class MainActivityPresenter implements Presenter<MainActivityView> {
                                             @Override
                                             public void onClickEdit(Student student) {
                                                 // todo: on click item button edit
+                                                mainActivityView.clickEdit(student);
                                             }
                                         }
                                 );
@@ -89,5 +87,15 @@ class MainActivityPresenter implements Presenter<MainActivityView> {
     void onUpdateItemAdapter(int indexChanged, Student student) {
         adapterDataStudentMainActivity.updateItemAdapter(indexChanged, student);
         mainActivityView.updateItemAdapter();
+    }
+
+    void updateAdapterItem(Student student) {
+        for (int a = 0; a < listDataStudent.size(); a++) {
+            Student studentTemp = listDataStudent.get(a);
+            if (studentTemp.getId().equals(student.getId())) {
+                adapterDataStudentMainActivity.updateItemAdapter(a, student);
+                break;
+            }
+        }
     }
 }
