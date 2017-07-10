@@ -57,11 +57,11 @@ class MainActivityPresenter implements Presenter<MainActivityView> {
                                             @Override
                                             public void onClickDelete(Student student) {
                                                 // todo: on click item button delete
+                                                mainActivityView.clickDelete(student);
                                             }
 
                                             @Override
                                             public void onClickEdit(Student student) {
-                                                // todo: on click item button edit
                                                 mainActivityView.clickEdit(student);
                                             }
                                         }
@@ -89,13 +89,10 @@ class MainActivityPresenter implements Presenter<MainActivityView> {
         mainActivityView.updateItemAdapter();
     }
 
-    void updateAdapterItem(Student student) {
-        for (int a = 0; a < listDataStudent.size(); a++) {
-            Student studentTemp = listDataStudent.get(a);
-            if (studentTemp.getId().equals(student.getId())) {
-                adapterDataStudentMainActivity.updateItemAdapter(a, student);
-                break;
-            }
-        }
+    void onClickDelete(Student student) {
+        AppDatabase.getInstance(context)
+                .studentDao()
+                .deleteStudentById(student);
+        adapterDataStudentMainActivity.deleteItemAdapter(student);
     }
 }

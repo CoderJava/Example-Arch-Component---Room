@@ -1,7 +1,9 @@
 package com.ysn.examplearchcomponentroom.views.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -141,5 +143,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         Intent intentStudentEditActivity = new Intent(this, StudentEditActivity.class);
         EventBus.getDefault().postSticky(student);
         startActivity(intentStudentEditActivity);
+    }
+
+    @Override
+    public void clickDelete(final Student student) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Warning");
+        builder.setCancelable(false);
+        builder.setMessage("Are you sure to delete this data?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mainActivityPresenter.onClickDelete(student);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog alertDialogDelete = builder.create();
+        alertDialogDelete.show();
     }
 }

@@ -20,4 +20,6 @@ interface MainActivityView extends View {
 
     void clickEdit(Student student);
 
+    void clickDelete(Student student);
+
 }

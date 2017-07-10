@@ -53,13 +53,17 @@ public class AdapterDataStudentMainActivity
 
     public void addNewItemAdapter(Student student) {
         this.listDataStudent.add(student);
-        notifyItemRangeInserted(0, this.listDataStudent.size());
         notifyDataSetChanged();
     }
 
     public void updateItemAdapter(int indexChanged, Student student) {
         this.listDataStudent.set(indexChanged, student);
         notifyItemChanged(indexChanged);
+    }
+
+    public void deleteItemAdapter(Student student) {
+        this.listDataStudent.remove(student);
+        notifyDataSetChanged();
     }
 
     class ViewHolderItemDataStudent extends RecyclerView.ViewHolder {
