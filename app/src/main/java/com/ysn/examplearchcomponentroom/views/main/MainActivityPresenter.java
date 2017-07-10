@@ -9,7 +9,9 @@ import com.ysn.examplearchcomponentroom.views.main.adapter.AdapterDataStudentMai
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -89,10 +91,25 @@ class MainActivityPresenter implements Presenter<MainActivityView> {
         mainActivityView.updateItemAdapter();
     }
 
-    void onClickDelete(Student student) {
-        AppDatabase.getInstance(context)
-                .studentDao()
-                .deleteStudentById(student);
-        adapterDataStudentMainActivity.deleteItemAdapter(student);
+    void onClickDelete(final Student student) {
+        Single
+                .fromCallable(new Callable<Boolean>() {
+                    @Override
+                    public Boolean call() throws Exception {
+                        AppDatabase.getInstance(context)
+                                .studentDao()
+                                .deleteStudentById(student);
+                        return true;
+                    }
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(@NonNull Boolean aBoolean) throws Exception {
+                        adapterDataStudentMainActivity.deleteItemAdapter(student);
+                    }
+                });
+
     }
 }
